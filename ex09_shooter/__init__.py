@@ -172,19 +172,19 @@ class Blast:
     self.x = x
     self.y = y
     self.radius = BLAST_START_RADIUS
-    self.alive = True
 
     blast_list.append(self)
 
   def update(self):
     self.radius += 1
 
-    if self.radius > BLAST_END_RADIUS:
-      self.alive = False
-
   def draw(self):
     pyxel.circ(self.x, self.y, self.radius, BLAST_COLOR_IN)
     pyxel.circb(self.x, self.y, self.radius, BLAST_COLOR_OUT)
+
+  @property
+  def alive(self):
+    return self.radius <= BLAST_END_RADIUS
 
 
 class App:
