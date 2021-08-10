@@ -3,9 +3,8 @@
 Use cursor keys to move your space ship.
 Press space to fire and kill aliens up!
 """
-from random import random
-
 import pyxel
+import random
 
 SCENE_TITLE = 0
 SCENE_PLAY = 1
@@ -65,7 +64,7 @@ class Background:
     self.star_list = []
     for _ in range(STAR_COUNT):
       self.star_list.append(
-          (random() * pyxel.width, random() * pyxel.height, random() * 1.5 + 1))
+          (_rand(pyxel.width), _rand(pyxel.height), _rand(1.5) + 1))
 
   def update(self):
     for i, (x, y, speed) in enumerate(self.star_list):
@@ -149,7 +148,7 @@ class Enemy:
     self.h = ENEMY_HEIGHT
     self.dir = 1
     self.alive = True
-    self.offset = int(random() * 60)
+    self.offset = random.randint(0, 60)
 
     enemy_list.append(self)
 
@@ -257,7 +256,7 @@ class App:
 
   def update_play_scene(self):
     if pyxel.frame_count % 6 == 0:
-      Enemy(random() * (pyxel.width - PLAYER_WIDTH), 0)
+      Enemy(_rand(pyxel.width - PLAYER_WIDTH), 0)
 
     for a in enemy_list:
       for b in bullet_list:
@@ -350,6 +349,10 @@ class App:
 
     pyxel.text(43, 66, "GAME OVER", 8)
     pyxel.text(31, 126, "- PRESS ENTER -", 13)
+
+
+def _rand(upto: float) -> float:
+  return random.random() * upto
 
 
 App()
