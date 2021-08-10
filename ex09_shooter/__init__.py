@@ -1,3 +1,8 @@
+"""Sample shooting game.
+
+Use cursor keys to move your space ship.
+Press space to fire and kill aliens up!
+"""
 from random import random
 
 import pyxel
@@ -33,31 +38,32 @@ bullet_list = []
 blast_list = []
 
 
-def update_list(list):
-  for elem in list:
+def update_list(iterable):
+  for elem in iterable:
     elem.update()
 
 
-def draw_list(list):
-  for elem in list:
+def draw_list(iterable):
+  for elem in iterable:
     elem.draw()
 
 
-def cleanup_list(list):
+def cleanup_list(iterable):
   i = 0
-  while i < len(list):
-    elem = list[i]
+  while i < len(iterable):
+    elem = iterable[i]
     if not elem.alive:
-      list.pop(i)
+      iterable.pop(i)
     else:
       i += 1
 
 
 class Background:
+  """Background star management."""
 
   def __init__(self):
     self.star_list = []
-    for i in range(STAR_COUNT):
+    for _ in range(STAR_COUNT):
       self.star_list.append(
           (random() * pyxel.width, random() * pyxel.height, random() * 1.5 + 1))
 
@@ -74,6 +80,7 @@ class Background:
 
 
 class Player:
+  """Player's space ship."""
 
   def __init__(self, x, y):
     self.x = x
@@ -111,6 +118,7 @@ class Player:
 
 
 class Bullet:
+  """Player's bullet."""
 
   def __init__(self, x, y):
     self.x = x
@@ -132,6 +140,7 @@ class Bullet:
 
 
 class Enemy:
+  """Alien!"""
 
   def __init__(self, x, y):
     self.x = x
@@ -162,6 +171,7 @@ class Enemy:
 
 
 class Blast:
+  """Blast when blowed up!"""
 
   def __init__(self, x, y):
     self.x = x
@@ -183,6 +193,7 @@ class Blast:
 
 
 class App:
+  """Game app main."""
 
   def __init__(self):
     pyxel.init(120, 160, caption="Pyxel Shooter")
