@@ -254,25 +254,21 @@ class App:
     if pyxel.frame_count % 6 == 0:
       Enemy(_rand(pyxel.width - PLAYER_WIDTH), 0)
 
-    for a in enemy_list:
-      for b in bullet_list:
-        if (a.x + a.w > b.x and b.x + b.w > a.x and a.y + a.h > b.y and
-            b.y + b.h > a.y):
-          a.alive = False
-          b.alive = False
+    for enemy in enemy_list:
+      for bullet in bullet_list:
+        if _is_collided(enemy, bullet):
+          enemy.alive = False
+          bullet.alive = False
 
-          blast_list.append(Blast(a.x + ENEMY_WIDTH / 2,
-                                  a.y + ENEMY_HEIGHT / 2))
+          blast_list.append(
+              Blast(enemy.x + ENEMY_WIDTH / 2, enemy.y + ENEMY_HEIGHT / 2))
 
           pyxel.play(1, 1)
 
           self.score += 10
 
     for enemy in enemy_list:
-      if (self.player.x + self.player.w > enemy.x and
-          enemy.x + enemy.w > self.player.x and
-          self.player.y + self.player.h > enemy.y and
-          enemy.y + enemy.h > self.player.y):
+      if _is_collided(self.player, enemy):
         enemy.alive = False
 
         # 自機の爆発を生成する
@@ -349,6 +345,13 @@ class App:
 
 def _rand(upto: float) -> float:
   return random.random() * upto
+
+
+def _is_collided(a, b) -> bool:
+  return a.x + a.w > b.x \
+     and b.x + b.w > a.x \
+     and a.y + a.h > b.y \
+     and b.y + b.h > a.y
 
 
 App()
