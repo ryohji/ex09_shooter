@@ -3,6 +3,7 @@
 Use cursor keys to move your space ship.
 Press space to fire and kill aliens up!
 """
+import itertools
 import pyxel
 import random
 
@@ -253,15 +254,14 @@ class App:
     if pyxel.frame_count % 6 == 0:
       Enemy(_rand(pyxel.width - PLAYER_WIDTH), 0)
 
-    for enemy in enemy_list:
-      for bullet in bullet_list:
-        if _is_collided(enemy, bullet):
-          enemy.alive = False
-          bullet.alive = False
+    for enemy, bullet in itertools.product(enemy_list, bullet_list):
+      if _is_collided(enemy, bullet):
+        enemy.alive = False
+        bullet.alive = False
 
-          _make_blast_on_center_of(enemy)
+        _make_blast_on_center_of(enemy)
 
-          self.score += 10
+        self.score += 10
 
     for enemy in enemy_list:
       if _is_collided(self.player, enemy):
