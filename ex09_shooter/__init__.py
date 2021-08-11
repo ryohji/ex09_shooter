@@ -7,7 +7,7 @@ import itertools
 import pyxel
 import random
 
-from typing import Any, List
+from typing import Any, Callable, List
 
 SCENE_TITLE = 0
 SCENE_PLAY = 1
@@ -38,16 +38,6 @@ BLAST_COLOR_OUT = 10
 enemy_list = []
 bullet_list = []
 blast_list = []
-
-
-def update_list(iterable):
-  for elem in iterable:
-    elem.update()
-
-
-def draw_list(iterable):
-  for elem in iterable:
-    elem.draw()
 
 
 class Background:
@@ -267,9 +257,8 @@ class App:
         self.scene = SCENE_GAMEOVER
 
     self.player.update()
-    update_list(bullet_list)
-    update_list(enemy_list)
-    update_list(blast_list)
+    for iterable in [bullet_list, enemy_list, blast_list]:
+      _apply(lambda a: a.update(), iterable)
 
     enemy_list = _filter_alive(enemy_list)
     bullet_list = _filter_alive(bullet_list)
@@ -278,9 +267,8 @@ class App:
   def update_gameover_scene(self):
     global bullet_list, enemy_list, blast_list
 
-    update_list(bullet_list)
-    update_list(enemy_list)
-    update_list(blast_list)
+    for iterable in [bullet_list, enemy_list, blast_list]:
+      _apply(lambda a: a.update(), iterable)
 
     enemy_list = _filter_alive(enemy_list)
     bullet_list = _filter_alive(bullet_list)
@@ -316,14 +304,12 @@ class App:
 
   def draw_play_scene(self):
     self.player.draw()
-    draw_list(bullet_list)
-    draw_list(enemy_list)
-    draw_list(blast_list)
+    for iterable in [bullet_list, enemy_list, blast_list]:
+      _apply(lambda a: a.draw(), iterable)
 
   def draw_gameover_scene(self):
-    draw_list(bullet_list)
-    draw_list(enemy_list)
-    draw_list(blast_list)
+    for iterable in [bullet_list, enemy_list, blast_list]:
+      _apply(lambda a: a.draw(), iterable)
 
     pyxel.text(43, 66, "GAME OVER", 8)
     pyxel.text(31, 126, "- PRESS ENTER -", 13)
@@ -347,6 +333,11 @@ def _make_blast_on_center_of(a) -> None:
 
 def _filter_alive(iterable) -> List[Any]:
   return list(filter(lambda a: a.alive, iterable))
+
+
+def _apply(f: Callable[[Any], None], iterable: List[Any]) -> None:
+  for item in iterable:
+    f(item)
 
 
 App()
