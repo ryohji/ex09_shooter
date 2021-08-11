@@ -260,8 +260,7 @@ class App:
           enemy.alive = False
           bullet.alive = False
 
-          blast_list.append(
-              Blast(enemy.x + ENEMY_WIDTH / 2, enemy.y + ENEMY_HEIGHT / 2))
+          Blast(enemy.x + ENEMY_WIDTH / 2, enemy.y + ENEMY_HEIGHT / 2)
 
           pyxel.play(1, 1)
 
@@ -272,11 +271,10 @@ class App:
         enemy.alive = False
 
         # 自機の爆発を生成する
-        blast_list.append(
-            Blast(
-                self.player.x + PLAYER_WIDTH / 2,
-                self.player.y + PLAYER_HEIGHT / 2,
-            ))
+        Blast(
+            self.player.x + PLAYER_WIDTH / 2,
+            self.player.y + PLAYER_HEIGHT / 2,
+        )
 
         pyxel.play(1, 1)
 
