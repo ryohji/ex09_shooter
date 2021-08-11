@@ -7,6 +7,8 @@ import itertools
 import pyxel
 import random
 
+from typing import Any, List
+
 SCENE_TITLE = 0
 SCENE_PLAY = 1
 SCENE_GAMEOVER = 2
@@ -46,16 +48,6 @@ def update_list(iterable):
 def draw_list(iterable):
   for elem in iterable:
     elem.draw()
-
-
-def cleanup_list(iterable):
-  i = 0
-  while i < len(iterable):
-    elem = iterable[i]
-    if not elem.alive:
-      iterable.pop(i)
-    else:
-      i += 1
 
 
 class Background:
@@ -251,6 +243,8 @@ class App:
       self.scene = SCENE_PLAY
 
   def update_play_scene(self):
+    global bullet_list, enemy_list, blast_list
+
     if pyxel.frame_count % 6 == 0:
       Enemy(_rand(pyxel.width - PLAYER_WIDTH), 0)
 
@@ -277,18 +271,20 @@ class App:
     update_list(enemy_list)
     update_list(blast_list)
 
-    cleanup_list(enemy_list)
-    cleanup_list(bullet_list)
-    cleanup_list(blast_list)
+    enemy_list = _filter_alive(enemy_list)
+    bullet_list = _filter_alive(bullet_list)
+    blast_list = _filter_alive(blast_list)
 
   def update_gameover_scene(self):
+    global bullet_list, enemy_list, blast_list
+
     update_list(bullet_list)
     update_list(enemy_list)
     update_list(blast_list)
 
-    cleanup_list(enemy_list)
-    cleanup_list(bullet_list)
-    cleanup_list(blast_list)
+    enemy_list = _filter_alive(enemy_list)
+    bullet_list = _filter_alive(bullet_list)
+    blast_list = _filter_alive(blast_list)
 
     if pyxel.btnp(pyxel.KEY_ENTER):
       self.scene = SCENE_PLAY
@@ -296,9 +292,9 @@ class App:
       self.player.y = pyxel.height - 20
       self.score = 0
 
-      enemy_list.clear()
-      bullet_list.clear()
-      blast_list.clear()
+      enemy_list = []
+      bullet_list = []
+      blast_list = []
 
   def draw(self):
     pyxel.cls(0)
@@ -347,6 +343,10 @@ def _is_collided(a, b) -> bool:
 def _make_blast_on_center_of(a) -> None:
   Blast(a.x + a.w / 2, a.y + a.h / 2)
   pyxel.play(1, 1)
+
+
+def _filter_alive(iterable) -> List[Any]:
+  return list(filter(lambda a: a.alive, iterable))
 
 
 App()
