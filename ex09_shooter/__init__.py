@@ -9,6 +9,8 @@ import random
 
 from typing import Any, Callable, List
 
+from ex09_shooter import minion
+
 SCENE_TITLE = 0
 SCENE_PLAY = 1
 SCENE_GAMEOVER = 2
@@ -57,118 +59,6 @@ class Background:
       pyxel.pset(x, y, color)
 
 
-class Player:
-  """Player's space ship."""
-
-  def __init__(self, x, y):
-    self.x = x
-    self.y = y
-    self.w = PLAYER_WIDTH
-    self.h = PLAYER_HEIGHT
-
-  def update(self):
-    if pyxel.btn(pyxel.KEY_LEFT):
-      self.x -= PLAYER_SPEED
-
-    if pyxel.btn(pyxel.KEY_RIGHT):
-      self.x += PLAYER_SPEED
-
-    if pyxel.btn(pyxel.KEY_UP):
-      self.y -= PLAYER_SPEED
-
-    if pyxel.btn(pyxel.KEY_DOWN):
-      self.y += PLAYER_SPEED
-
-    self.x = max(self.x, 0)
-    self.x = min(self.x, pyxel.width - self.w)
-    self.y = max(self.y, 0)
-    self.y = min(self.y, pyxel.height - self.h)
-
-    if pyxel.btnp(pyxel.KEY_SPACE):
-      Bullet(self.x + (PLAYER_WIDTH - BULLET_WIDTH) / 2,
-             self.y - BULLET_HEIGHT / 2)
-
-      pyxel.play(0, 0)
-
-  def draw(self):
-    pyxel.blt(self.x, self.y, 0, 0, 0, self.w, self.h, 0)
-
-
-class Bullet:
-  """Player's bullet."""
-
-  def __init__(self, x, y):
-    self.x = x
-    self.y = y
-    self.w = BULLET_WIDTH
-    self.h = BULLET_HEIGHT
-    self.alive = True
-
-    bullet_list.append(self)
-
-  def update(self):
-    self.y -= BULLET_SPEED
-
-    if self.y + self.h - 1 < 0:
-      self.alive = False
-
-  def draw(self):
-    pyxel.rect(self.x, self.y, self.w, self.h, BULLET_COLOR)
-
-
-class Enemy:
-  """Alien!"""
-
-  def __init__(self, x, y):
-    self.x = x
-    self.y = y
-    self.w = ENEMY_WIDTH
-    self.h = ENEMY_HEIGHT
-    self.dir = 1
-    self.alive = True
-    self.offset = random.randint(0, 60)
-
-    enemy_list.append(self)
-
-  def update(self):
-    if (pyxel.frame_count + self.offset) % 60 < 30:
-      self.x += ENEMY_SPEED
-      self.dir = 1
-    else:
-      self.x -= ENEMY_SPEED
-      self.dir = -1
-
-    self.y += ENEMY_SPEED
-
-    if self.y > pyxel.height - 1:
-      self.alive = False
-
-  def draw(self):
-    pyxel.blt(self.x, self.y, 0, 8, 0, self.w * self.dir, self.h, 0)
-
-
-class Blast:
-  """Blast when blowed up!"""
-
-  def __init__(self, x, y):
-    self.x = x
-    self.y = y
-    self.radius = BLAST_START_RADIUS
-
-    blast_list.append(self)
-
-  def update(self):
-    self.radius += 1
-
-  def draw(self):
-    pyxel.circ(self.x, self.y, self.radius, BLAST_COLOR_IN)
-    pyxel.circb(self.x, self.y, self.radius, BLAST_COLOR_OUT)
-
-  @property
-  def alive(self):
-    return self.radius <= BLAST_END_RADIUS
-
-
 class App:
   """Game app main."""
 
@@ -211,7 +101,7 @@ class App:
     self.scene = SCENE_TITLE
     self.score = 0
     self.background = Background()
-    self.player = Player(pyxel.width / 2, pyxel.height - 20)
+    self.player = minion.Player(pyxel.width / 2, pyxel.height - 20)
 
     pyxel.run(self.update, self.draw)
 
@@ -236,7 +126,7 @@ class App:
     global bullet_list, enemy_list, blast_list
 
     if pyxel.frame_count % 6 == 0:
-      Enemy(_rand(pyxel.width - PLAYER_WIDTH), 0)
+      minion.Enemy(_rand(pyxel.width - PLAYER_WIDTH), 0)
 
     for enemy, bullet in itertools.product(enemy_list, bullet_list):
       if _is_collided(enemy, bullet):
@@ -327,7 +217,7 @@ def _is_collided(a, b) -> bool:
 
 
 def _make_blast_on_center_of(a) -> None:
-  Blast(a.x + a.w / 2, a.y + a.h / 2)
+  minion.Blast(a.x + a.w / 2, a.y + a.h / 2)
   pyxel.play(1, 1)
 
 
