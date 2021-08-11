@@ -1,7 +1,7 @@
 """Blast when things blown up."""
 import pyxel
 
-import ex09_shooter
+from ex09_shooter import scene
 
 RADIUS_START = 1
 RADIUS_END = 8
@@ -17,7 +17,7 @@ class Blast:
     self.y = y
     self.radius = RADIUS_START
 
-    ex09_shooter.blast_list.append(self)
+    scene.blast_list.append(self)
 
   def update(self):
     self.radius += 1

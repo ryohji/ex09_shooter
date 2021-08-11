@@ -3,25 +3,16 @@
 Use cursor keys to move your space ship.
 Press space to fire and kill aliens up!
 """
-import itertools
 import pyxel
 import random
 
-from typing import Any, Callable, List
-
-from ex09_shooter import minion
-
-SCENE_TITLE = 0
-SCENE_PLAY = 1
-SCENE_GAMEOVER = 2
+from ex09_shooter import scene
 
 STAR_COUNT = 100
 STAR_COLOR_HIGH = 12
 STAR_COLOR_LOW = 5
 
-enemy_list = []
-bullet_list = []
-blast_list = []
+score = 0
 
 
 class Background:
@@ -80,10 +71,11 @@ class App:
     pyxel.sound(0).set("a3a2c1a1", "p", "7", "s", 5)
     pyxel.sound(1).set("a3a2c2c2", "n", "7742", "s", 10)
 
-    self.scene = SCENE_TITLE
-    self.score = 0
+    def transit(cls):
+      self._scene = cls(transit)
+
     self.background = Background()
-    self.player = minion.Player(pyxel.width / 2, pyxel.height - 20)
+    transit(scene.Title)
 
     pyxel.run(self.update, self.draw)
 
@@ -92,124 +84,19 @@ class App:
       pyxel.quit()
 
     self.background.update()
-
-    if self.scene == SCENE_TITLE:
-      self.update_title_scene()
-    elif self.scene == SCENE_PLAY:
-      self.update_play_scene()
-    elif self.scene == SCENE_GAMEOVER:
-      self.update_gameover_scene()
-
-  def update_title_scene(self):
-    if pyxel.btnp(pyxel.KEY_ENTER):
-      self.scene = SCENE_PLAY
-
-  def update_play_scene(self):
-    global bullet_list, enemy_list, blast_list
-
-    if pyxel.frame_count % 6 == 0:
-      minion.spawn_enemy(_rand)
-
-    for enemy, bullet in itertools.product(enemy_list, bullet_list):
-      if _is_collided(enemy, bullet):
-        enemy.alive = False
-        bullet.alive = False
-
-        _make_blast_on_center_of(enemy)
-
-        self.score += 10
-
-    for enemy in enemy_list:
-      if _is_collided(self.player, enemy):
-        enemy.alive = False
-
-        # 自機の爆発を生成する
-        _make_blast_on_center_of(self.player)
-
-        self.scene = SCENE_GAMEOVER
-
-    self.player.update()
-    for iterable in [bullet_list, enemy_list, blast_list]:
-      _apply(lambda a: a.update(), iterable)
-
-    enemy_list = _filter_alive(enemy_list)
-    bullet_list = _filter_alive(bullet_list)
-    blast_list = _filter_alive(blast_list)
-
-  def update_gameover_scene(self):
-    global bullet_list, enemy_list, blast_list
-
-    for iterable in [bullet_list, enemy_list, blast_list]:
-      _apply(lambda a: a.update(), iterable)
-
-    enemy_list = _filter_alive(enemy_list)
-    bullet_list = _filter_alive(bullet_list)
-    blast_list = _filter_alive(blast_list)
-
-    if pyxel.btnp(pyxel.KEY_ENTER):
-      self.scene = SCENE_PLAY
-      self.player.x = pyxel.width / 2
-      self.player.y = pyxel.height - 20
-      self.score = 0
-
-      enemy_list = []
-      bullet_list = []
-      blast_list = []
+    self._scene.update()
 
   def draw(self):
     pyxel.cls(0)
 
     self.background.draw()
+    self._scene.draw()
 
-    if self.scene == SCENE_TITLE:
-      self.draw_title_scene()
-    elif self.scene == SCENE_PLAY:
-      self.draw_play_scene()
-    elif self.scene == SCENE_GAMEOVER:
-      self.draw_gameover_scene()
-
-    pyxel.text(39, 4, "SCORE {:5}".format(self.score), 7)
-
-  def draw_title_scene(self):
-    pyxel.text(35, 66, "Pyxel Shooter", pyxel.frame_count % 16)
-    pyxel.text(31, 126, "- PRESS ENTER -", 13)
-
-  def draw_play_scene(self):
-    self.player.draw()
-    for iterable in [bullet_list, enemy_list, blast_list]:
-      _apply(lambda a: a.draw(), iterable)
-
-  def draw_gameover_scene(self):
-    for iterable in [bullet_list, enemy_list, blast_list]:
-      _apply(lambda a: a.draw(), iterable)
-
-    pyxel.text(43, 66, "GAME OVER", 8)
-    pyxel.text(31, 126, "- PRESS ENTER -", 13)
+    pyxel.text(39, 4, f"SCORE {score:5}", 7)
 
 
 def _rand(upto: float) -> float:
   return random.random() * upto
-
-
-def _is_collided(a, b) -> bool:
-  return a.x + a.w > b.x \
-     and b.x + b.w > a.x \
-     and a.y + a.h > b.y \
-     and b.y + b.h > a.y
-
-
-def _make_blast_on_center_of(a) -> None:
-  minion.Blast(a.x + a.w / 2, a.y + a.h / 2)
-  pyxel.play(1, 1)
-
-
-def _filter_alive(iterable) -> List[Any]:
-  return list(filter(lambda a: a.alive, iterable))
-
-
-def _apply(f: Callable[[Any], None], iterable: List[Any]) -> None:
-  for item in iterable:
-    f(item)
 
 
 App()

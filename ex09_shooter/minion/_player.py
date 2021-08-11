@@ -1,7 +1,7 @@
 """Your space ship."""
 import pyxel
 
-import ex09_shooter
+from ex09_shooter import minion
 
 WIDTH = 8
 HEIGHT = 8
@@ -36,7 +36,7 @@ class Player:
     self.y = min(self.y, pyxel.height - self.h)
 
     if pyxel.btnp(pyxel.KEY_SPACE):
-      ex09_shooter.minion.fire_bullet_from(self)
+      minion.fire_bullet_from(self)
       pyxel.play(0, 0)
 
   def draw(self):

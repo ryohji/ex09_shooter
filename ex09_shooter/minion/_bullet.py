@@ -1,7 +1,7 @@
 """Player's bullet."""
 import pyxel
 
-import ex09_shooter
+from ex09_shooter import scene
 
 WIDTH = 2
 HEIGHT = 8
@@ -19,7 +19,7 @@ class Bullet:
     self.h = HEIGHT
     self.alive = True
 
-    ex09_shooter.bullet_list.append(self)
+    scene.bullet_list.append(self)
 
   def update(self):
     self.y -= SPEED
