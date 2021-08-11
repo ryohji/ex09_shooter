@@ -82,7 +82,6 @@ class Player:
     self.y = y
     self.w = PLAYER_WIDTH
     self.h = PLAYER_HEIGHT
-    self.alive = True
 
   def update(self):
     if pyxel.btn(pyxel.KEY_LEFT):
@@ -260,9 +259,7 @@ class App:
           enemy.alive = False
           bullet.alive = False
 
-          Blast(enemy.x + ENEMY_WIDTH / 2, enemy.y + ENEMY_HEIGHT / 2)
-
-          pyxel.play(1, 1)
+          _make_blast_on_center_of(enemy)
 
           self.score += 10
 
@@ -271,12 +268,7 @@ class App:
         enemy.alive = False
 
         # 自機の爆発を生成する
-        Blast(
-            self.player.x + PLAYER_WIDTH / 2,
-            self.player.y + PLAYER_HEIGHT / 2,
-        )
-
-        pyxel.play(1, 1)
+        _make_blast_on_center_of(self.player)
 
         self.scene = SCENE_GAMEOVER
 
@@ -350,6 +342,11 @@ def _is_collided(a, b) -> bool:
      and b.x + b.w > a.x \
      and a.y + a.h > b.y \
      and b.y + b.h > a.y
+
+
+def _make_blast_on_center_of(a) -> None:
+  Blast(a.x + a.w / 2, a.y + a.h / 2)
+  pyxel.play(1, 1)
 
 
 App()
