@@ -19,24 +19,6 @@ STAR_COUNT = 100
 STAR_COLOR_HIGH = 12
 STAR_COLOR_LOW = 5
 
-PLAYER_WIDTH = 8
-PLAYER_HEIGHT = 8
-PLAYER_SPEED = 2
-
-BULLET_WIDTH = 2
-BULLET_HEIGHT = 8
-BULLET_COLOR = 11
-BULLET_SPEED = 4
-
-ENEMY_WIDTH = 8
-ENEMY_HEIGHT = 8
-ENEMY_SPEED = 1.5
-
-BLAST_START_RADIUS = 1
-BLAST_END_RADIUS = 8
-BLAST_COLOR_IN = 7
-BLAST_COLOR_OUT = 10
-
 enemy_list = []
 bullet_list = []
 blast_list = []
@@ -126,7 +108,7 @@ class App:
     global bullet_list, enemy_list, blast_list
 
     if pyxel.frame_count % 6 == 0:
-      minion.Enemy(_rand(pyxel.width - PLAYER_WIDTH), 0)
+      minion.spawn_enemy(_rand)
 
     for enemy, bullet in itertools.product(enemy_list, bullet_list):
       if _is_collided(enemy, bullet):

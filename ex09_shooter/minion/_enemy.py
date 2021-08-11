@@ -4,6 +4,10 @@ import random
 
 import ex09_shooter
 
+WIDTH = 8
+HEIGHT = 8
+SPEED = 1.5
+
 
 class Enemy:
   """Alien!"""
@@ -11,8 +15,8 @@ class Enemy:
   def __init__(self, x, y):
     self.x = x
     self.y = y
-    self.w = ex09_shooter.ENEMY_WIDTH
-    self.h = ex09_shooter.ENEMY_HEIGHT
+    self.w = WIDTH
+    self.h = HEIGHT
     self.dir = 1
     self.alive = True
     self.offset = random.randint(0, 60)
@@ -21,13 +25,13 @@ class Enemy:
 
   def update(self):
     if (pyxel.frame_count + self.offset) % 60 < 30:
-      self.x += ex09_shooter.ENEMY_SPEED
+      self.x += SPEED
       self.dir = 1
     else:
-      self.x -= ex09_shooter.ENEMY_SPEED
+      self.x -= SPEED
       self.dir = -1
 
-    self.y += ex09_shooter.ENEMY_SPEED
+    self.y += SPEED
 
     if self.y > pyxel.height - 1:
       self.alive = False
