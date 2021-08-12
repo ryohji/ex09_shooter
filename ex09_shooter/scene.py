@@ -5,7 +5,7 @@ import random
 
 import ex09_shooter
 
-from typing import Any, Callable, List
+from typing import Any, Callable
 
 from ex09_shooter import minion
 
@@ -33,16 +33,13 @@ class Play:
   """Play level scene."""
 
   def __init__(self, transit: Callable[[Any], None]):
-    global enemy_list, bullet_list, blast_list
-
     self._transit = transit
 
     self.player = minion.Player(pyxel.width / 2, pyxel.height - 20)
     ex09_shooter.score = 0
 
-    enemy_list = []
-    bullet_list = []
-    blast_list = []
+    for minions in [enemy_list, bullet_list, blast_list]:
+      del minions[:]
 
   def update(self):
     if pyxel.frame_count % 6 == 0:
@@ -69,15 +66,12 @@ class Play:
     if pyxel.btnp(pyxel.KEY_SPACE):
       _make_shot_from(self.player)
 
-    for minions in [bullet_list, enemy_list, blast_list]:
-      _apply(lambda minion: minion.update(), minions)
-
+    _update_minions()
     _filter_minions_alive()
 
   def draw(self):
     self.player.draw()
-    for minions in [bullet_list, enemy_list, blast_list]:
-      _apply(lambda minion: minion.draw(), minions)
+    _draw_minions()
 
 
 class GameOver:
@@ -87,28 +81,37 @@ class GameOver:
     self._transit = transit
 
   def update(self):
-    for minions in [bullet_list, enemy_list, blast_list]:
-      _apply(lambda minion: minion.update(), minions)
-
+    _update_minions()
     _filter_minions_alive()
 
     if pyxel.btnp(pyxel.KEY_ENTER):
       self._transit(Play)
 
   def draw(self):
-    for minions in [bullet_list, enemy_list, blast_list]:
-      _apply(lambda minion: minion.draw(), minions)
+    _draw_minions()
 
     pyxel.text(43, 66, "GAME OVER", 8)
     pyxel.text(31, 126, "- PRESS ENTER -", 13)
 
 
+def _update_minions():
+  for m in bullet_list + enemy_list + blast_list:
+    m.update()
+
+
+def _draw_minions():
+  for m in bullet_list + enemy_list + blast_list:
+    m.draw()
+
+
 def _filter_minions_alive():
   global enemy_list, bullet_list, blast_list
 
-  enemy_list = _filter_alive(enemy_list)
-  bullet_list = _filter_alive(bullet_list)
-  blast_list = _filter_alive(blast_list)
+  filter_alive = lambda ms: list(filter(lambda m: m.alive, ms))
+
+  enemy_list = filter_alive(enemy_list)
+  bullet_list = filter_alive(bullet_list)
+  blast_list = filter_alive(blast_list)
 
 
 def _rand(upto: float) -> float:
@@ -130,12 +133,3 @@ def _make_shot_from(player) -> None:
 def _make_blast_on_center_of(obj) -> None:
   blast_list.append(minion.make_blast_on_center_of(obj))
   pyxel.play(1, 1)
-
-
-def _filter_alive(minions) -> List[Any]:
-  return list(filter(lambda minion: minion.alive, minions))
-
-
-def _apply(f: Callable[[Any], None], minions: List[Any]) -> None:
-  for obj in minions:
-    f(obj)
