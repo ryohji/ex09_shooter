@@ -1,8 +1,6 @@
 """Blast when things blown up."""
 import pyxel
 
-from ex09_shooter import scene
-
 RADIUS_START = 1
 RADIUS_END = 8
 COLOR = 7
@@ -10,14 +8,12 @@ COLOR_EDGE = 10
 
 
 class Blast:
-  """Blast when blowed up!"""
+  """Blast when things blown up!"""
 
   def __init__(self, x, y):
     self.x = x
     self.y = y
     self.radius = RADIUS_START
-
-    scene.blast_list.append(self)
 
   def update(self):
     self.radius += 1

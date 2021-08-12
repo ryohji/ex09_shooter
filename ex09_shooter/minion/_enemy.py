@@ -2,8 +2,6 @@
 import pyxel
 import random
 
-from ex09_shooter import scene
-
 WIDTH = 8
 HEIGHT = 8
 SPEED = 1.5
@@ -20,8 +18,6 @@ class Enemy:
     self.dir = 1
     self.alive = True
     self.offset = random.randint(0, 60)
-
-    scene.enemy_list.append(self)
 
   def update(self):
     self.dir = 1 if (pyxel.frame_count + self.offset) % 60 < 30 else -1

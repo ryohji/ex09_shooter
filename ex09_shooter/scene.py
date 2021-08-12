@@ -46,7 +46,7 @@ class Play:
 
   def update(self):
     if pyxel.frame_count % 6 == 0:
-      minion.spawn_enemy(_rand)
+      enemy_list.append(minion.spawn_enemy(_rand))
 
     for enemy, bullet in itertools.product(enemy_list, bullet_list):
       if _is_collided(enemy, bullet):
@@ -66,6 +66,9 @@ class Play:
         self._transit(GameOver)
 
     self.player.update()
+    if pyxel.btnp(pyxel.KEY_SPACE):
+      _make_shot_from(self.player)
+
     for minions in [bullet_list, enemy_list, blast_list]:
       _apply(lambda minion: minion.update(), minions)
 
@@ -119,8 +122,13 @@ def _is_collided(a, b) -> bool:
      and b.y + b.h > a.y
 
 
+def _make_shot_from(player) -> None:
+  bullet_list.append(minion.fire_bullet_from(player))
+  pyxel.play(0, 0)
+
+
 def _make_blast_on_center_of(obj) -> None:
-  minion.Blast(obj.x + obj.w / 2, obj.y + obj.h / 2)
+  blast_list.append(minion.make_blast_on_center_of(obj))
   pyxel.play(1, 1)
 
 
