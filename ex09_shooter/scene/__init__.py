@@ -8,10 +8,13 @@ import ex09_shooter
 from typing import Any, Callable
 
 from ex09_shooter import minion
+from ex09_shooter.scene import _background
 
 enemy_list = []
 bullet_list = []
 blast_list = []
+
+Background = _background.Stars
 
 
 class Title:

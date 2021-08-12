@@ -4,32 +4,10 @@ Use cursor keys to move your space ship.
 Press space to fire and kill aliens up!
 """
 import pyxel
-import random
 
 from ex09_shooter import scene
 
-STAR_COUNT = 100
-STAR_COLOR_HIGH = 12
-STAR_COLOR_LOW = 5
-
 score = 0
-
-
-class Background:
-  """Background star management."""
-
-  def __init__(self):
-    self.star_list = [(_rand(pyxel.width), _rand(pyxel.height), _rand(1.5) + 1)
-                      for _ in range(STAR_COUNT)]
-
-  def update(self):
-    renew_star = lambda x, y, speed: (x, (y + speed) % pyxel.height, speed)
-    self.star_list = [renew_star(x, y, speed) for x, y, speed in self.star_list]
-
-  def draw(self):
-    for x, y, speed in self.star_list:
-      color = STAR_COLOR_HIGH if speed > 1.8 else STAR_COLOR_LOW
-      pyxel.pset(x, y, color)
 
 
 class App:
@@ -74,7 +52,7 @@ class App:
     def transit(cls):
       self._scene = cls(transit)
 
-    self.background = Background()
+    self._background = scene.Background()
     transit(scene.Title)
 
     pyxel.run(self.update, self.draw)
@@ -83,20 +61,16 @@ class App:
     if pyxel.btnp(pyxel.KEY_Q):
       pyxel.quit()
 
-    self.background.update()
+    self._background.update()
     self._scene.update()
 
   def draw(self):
     pyxel.cls(0)
 
-    self.background.draw()
+    self._background.draw()
     self._scene.draw()
 
     pyxel.text(39, 4, f"SCORE {score:5}", 7)
-
-
-def _rand(upto: float) -> float:
-  return random.random() * upto
 
 
 App()
