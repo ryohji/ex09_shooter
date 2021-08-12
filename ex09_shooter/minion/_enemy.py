@@ -24,17 +24,12 @@ class Enemy:
     scene.enemy_list.append(self)
 
   def update(self):
-    if (pyxel.frame_count + self.offset) % 60 < 30:
-      self.x += SPEED
-      self.dir = 1
-    else:
-      self.x -= SPEED
-      self.dir = -1
-
+    self.dir = 1 if (pyxel.frame_count + self.offset) % 60 < 30 else -1
+    self.x += SPEED * self.dir
     self.y += SPEED
 
     if self.y > pyxel.height - 1:
       self.alive = False
 
   def draw(self):
-    pyxel.blt(self.x, self.y, 0, 8, 0, self.w * self.dir, self.h, 0)
+    pyxel.blt(self.x, self.y, 0, 8, 0, WIDTH * self.dir, HEIGHT, 0)

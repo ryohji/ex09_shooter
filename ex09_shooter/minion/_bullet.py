@@ -24,8 +24,8 @@ class Bullet:
   def update(self):
     self.y -= SPEED
 
-    if self.y + self.h - 1 < 0:
+    if self.y + HEIGHT - 1 < 0:
       self.alive = False
 
   def draw(self):
-    pyxel.rect(self.x, self.y, self.w, self.h, COLOR)
+    pyxel.rect(self.x, self.y, WIDTH, HEIGHT, COLOR)
