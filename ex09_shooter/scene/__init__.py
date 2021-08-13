@@ -100,12 +100,12 @@ class GameOver:
 
 
 def _update_minions():
-  for m in bullet_list + enemy_list + blast_list:
+  for m in itertools.chain(bullet_list, enemy_list, blast_list):
     m.update()
 
 
 def _draw_minions():
-  for m in bullet_list + enemy_list + blast_list:
+  for m in itertools.chain(bullet_list, enemy_list, blast_list):
     m.draw()
 
 
