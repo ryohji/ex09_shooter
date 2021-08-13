@@ -6,7 +6,7 @@ HEIGHT = 8
 SPEED = 2
 
 
-class Player:
+class Minion:
   """Player's space ship."""
 
   def __init__(self, x, y):

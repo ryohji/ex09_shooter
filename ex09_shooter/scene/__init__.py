@@ -1,4 +1,6 @@
 """Scene management."""
+from __future__ import annotations
+
 import itertools
 import pyxel
 import random
@@ -121,18 +123,17 @@ def _rand(upto: float) -> float:
   return random.random() * upto
 
 
-def _is_collided(a, b) -> bool:
-  return a.x + a.w > b.x \
-     and b.x + b.w > a.x \
-     and a.y + a.h > b.y \
-     and b.y + b.h > a.y
+def _is_collided(a: minion.Enemy | minion.Player,
+                 b: minion.Enemy | minion.Bullet) -> bool:
+  return a.x + a.w > b.x and b.x + b.w > a.x \
+     and a.y + a.h > b.y and b.y + b.h > a.y
 
 
-def _make_shot_from(player) -> None:
+def _make_shot_from(player: minion.Player) -> None:
   bullet_list.append(minion.fire_bullet_from(player))
   pyxel.play(0, 0)
 
 
-def _make_blast_on_center_of(obj) -> None:
+def _make_blast_on_center_of(obj: minion.Player | minion.Enemy) -> None:
   blast_list.append(minion.make_blast_on_center_of(obj))
   pyxel.play(1, 1)

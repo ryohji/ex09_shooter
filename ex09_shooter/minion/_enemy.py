@@ -7,7 +7,7 @@ HEIGHT = 8
 SPEED = 1.5
 
 
-class Enemy:
+class Minion:
   """Alien!"""
 
   def __init__(self, x, y):

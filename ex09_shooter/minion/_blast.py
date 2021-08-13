@@ -7,7 +7,7 @@ COLOR = 7
 COLOR_EDGE = 10
 
 
-class Blast:
+class Minion:
   """Blast when things blown up!"""
 
   def __init__(self, x, y):

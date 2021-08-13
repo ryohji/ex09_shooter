@@ -7,7 +7,7 @@ COLOR = 11
 SPEED = 4
 
 
-class Bullet:
+class Minion:
   """Player's bullet."""
 
   def __init__(self, x, y):
