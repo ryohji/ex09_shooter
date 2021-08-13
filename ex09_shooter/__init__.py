@@ -10,35 +10,33 @@ from ex09_shooter import scene
 score = 0
 
 
-class App:
-  """Game app main."""
+def main():
+  """Game main."""
+  pyxel.init(120, 160, caption="Pyxel Shooter")
+  pyxel.load("assets.pyxres", True, False, True, False)
 
-  def __init__(self):
-    pyxel.init(120, 160, caption="Pyxel Shooter")
-    pyxel.load("assets.pyxres", True, False, True, False)
+  scene_ = None
+  background = scene.Background()
 
-    def transit(cls):
-      self._scene = cls(transit)
-
-    self._background = scene.Background()
-    transit(scene.Title)
-
-    pyxel.run(self.update, self.draw)
-
-  def update(self):
+  def update():
     if pyxel.btnp(pyxel.KEY_Q):
       pyxel.quit()
 
-    self._background.update()
-    self._scene.update()
+    background.update()
+    scene_.update()
 
-  def draw(self):
+  def draw():
     pyxel.cls(0)
 
-    self._background.draw()
-    self._scene.draw()
+    background.draw()
+    scene_.draw()
 
     pyxel.text(39, 4, f"SCORE {score:5}", 7)
 
+  def transit(cls):
+    nonlocal scene_
+    scene_ = cls(transit)
 
-App()
+  transit(scene.Title)
+
+  pyxel.run(update, draw)
