@@ -15,10 +15,7 @@ class App:
 
   def __init__(self):
     pyxel.init(120, 160, caption="Pyxel Shooter")
-    pyxel.load("assets.pyxres")
-
-    pyxel.sound(0).set("a3a2c1a1", "p", "7", "s", 5)
-    pyxel.sound(1).set("a3a2c2c2", "n", "7742", "s", 10)
+    pyxel.load("assets.pyxres", True, False, True, False)
 
     def transit(cls):
       self._scene = cls(transit)
